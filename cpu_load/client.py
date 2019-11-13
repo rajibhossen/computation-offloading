@@ -15,18 +15,19 @@ def client_face_recognition(URL, ID):
     time_series = 0
     poisson_data = []
     for i in range(2):
+        nextitem = random.expovariate(poisson_rate)
+        time_series += nextitem
+        poisson_data.append(time_series)
+        time.sleep(nextitem)
+
         params = {"job_id": i, "client_id": ID}
         response = requests.get(url=URL, params=params)
 
         if response.status_code == 200:
-            print("JOB: %d-submitted" % i)
+            print("CLIENT [%d] JOB: %d-submitted" % (ID,i))
         elif response.status_code == 404:
             print("JOB: %d-server error!" % i)
 
-        next = random.expovariate(poisson_rate)
-        time_series += next
-        poisson_data.append(time_series)
-        time.sleep(next)
 
     end = time.time()
     elapsed = end - begin
