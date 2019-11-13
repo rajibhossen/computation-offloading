@@ -1,0 +1,11 @@
+To run redis server
+# redis-server /usr/local/etc/redis.conf
+
+To run workers
+# celery -A app.celery worker --loglevel=info -c 8
+
+To run flask app
+# python3 app.py
+
+To run flower monitoring
+# celery flower -A app.celery --broker=redis://localhost:6379/0
