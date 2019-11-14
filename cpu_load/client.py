@@ -14,7 +14,7 @@ def client_face_recognition(URL, ID):
     begin = time.time()
     time_series = 0
     poisson_data = []
-    for i in range(10):
+    for i in range(300):
         nextitem = random.expovariate(poisson_rate)
         time_series += nextitem
         poisson_data.append(time_series)
