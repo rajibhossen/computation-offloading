@@ -14,7 +14,8 @@ def initialize_db():
     conn = sqlite3.connect("cpu_load.db")
     cursor = conn.cursor()
     sql = 'create table if not exists tasks (id integer primary key, client_id integer, job_id integer, ' \
-          'arrival_time timestamp , end_time timestamp, job_time timestamp, queue_time timestamp )'
+          'arrival_time timestamp , end_time timestamp, job_time timestamp, queue_time timestamp, ' \
+          'total_time timestamp )'
     cursor.execute(sql)
     conn.commit()
     conn.close()

@@ -24,13 +24,14 @@ def face_recognition(job_id, client_id, queue_start):
 
     end = time.time()
     duration = end - float(start)
-    
+    total = queue_duration + duration
     db_conn = database.get_connection()
     cursor = db_conn.cursor()
     while True:
         try:
             cursor.execute("insert into tasks (client_id, job_id, arrival_time, end_time, job_time, queue_time) "
-                   "values (?,?,?,?,?,?)", (client_id, job_id, queue_start, end, duration, queue_duration))
+                   "values (?,?,?,?,?,?,?)", (client_id, job_id, queue_start, end, duration, 
+                                              queue_duration, total))
             db_conn.commit()
         except sqlite3.Error as e:
             continue
