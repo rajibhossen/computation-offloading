@@ -1,5 +1,4 @@
 import sqlite3
-from sqlite3 import Error
 
 
 def create_table(cur, query):
@@ -7,27 +6,17 @@ def create_table(cur, query):
 
 
 def get_connection():
-    connection = None
-    try:
-        connection = sqlite3.connect("cpu_load.db")
-    except Error as e:
-        print(e)
-
-    cursor = connection.cursor()
-
-    sql_create_tasks_table = """CREATE TABLE IF NOT EXISTS tasks (
-                                        client_id integer PRIMARY KEY,
-                                        job_id integer NOT NULL,
-                                        start_time timestamp NOT NULL,
-                                        end_time timestamp NOT NULL,
-                                        duration timestamp NOT NULL 
-                                    );"""
-
-    create_table(cursor, sql_create_tasks_table)
-
-    return cursor
+    conn = sqlite3.connect("cpu_load.db")
+    return conn
 
 
-def close_connection(connection):
-    connection.close()
+def initialize_db():
+    conn = sqlite3.connect("cpu_load.db")
+    cursor = conn.cursor()
+    sql = 'create table if not exists tasks (id integer primary key, client_id integer, job_id integer, ' \
+          'start_time timestamp , end_time timestamp, duration timestamp )'
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
+
 
