@@ -15,19 +15,28 @@ database.initialize_db() # initializing db connection
 
 
 @celery.task(name="face.recognition")
-def face_recognition(job_id, client_id, start):
-    db_conn = database.get_connection()
-    cursor = db_conn.cursor()
+def face_recognition(job_id, client_id, queue_start):
+    queue_end = time.time()
+    queue_duration = queue_end - queue_start
+    start = time.time()
     
     result = recognize_func()  # face recognition
 
     end = time.time()
     duration = end - float(start)
     
-    cursor.execute("insert into tasks (client_id, job_id, start_time, end_time, duration) values (?,?,?,?,?)",
-                   (client_id, job_id, start, end, duration))
-    db_conn.commit()
-    db_conn.close()
+    db_conn = database.get_connection()
+    cursor = db_conn.cursor()
+    while True:
+        try:
+            cursor.execute("insert into tasks (client_id, job_id, arrival_time, end_time, job_time, queue_time) "
+                   "values (?,?,?,?,?,?)", (client_id, job_id, queue_start, end, duration, queue_duration))
+            db_conn.commit()
+        except sqlite3.Error as e:
+            continue
+        db_conn.close()
+        break
+
     return "Client: " + str(client_id) + " JOB: " + str(job_id) + " Duration: " + str(duration)
 
 
@@ -41,9 +50,9 @@ def task_face_recognition():
         
     job_id = request.args.get('job_id')
     client_id = request.args.get('client_id')
-    start_time = time.time()
+    queue_time = time.time()
     
-    task = face_recognition.delay(job_id, client_id, start_time)
+    task = face_recognition.delay(job_id, client_id, queue_time)
     return str(task)
 
 

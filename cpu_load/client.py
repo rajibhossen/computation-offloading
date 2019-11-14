@@ -1,6 +1,7 @@
 import requests
 import time
 import random
+import csv
 
 import matplotlib.pyplot as plt
 from multiprocessing import Process
@@ -9,7 +10,7 @@ F_REC = "/face_recognition"
 
 
 def client_face_recognition(URL, ID):
-    poisson_rate = 1 / 5.0  # 1 jobs per 5 sec
+    poisson_rate = 1 / 3.0  # 1 jobs per 5 sec
     # simulate 30 minutes-10*30 = 300
     begin = time.time()
     time_series = 0
@@ -24,18 +25,23 @@ def client_face_recognition(URL, ID):
         response = requests.get(url=URL, params=params)
 
         if response.status_code == 200:
-            print("[CLIENT %d] JOB-%d-submitted" % (ID,i))
+            print("[CLIENT %d] JOB-%d submitted" % (ID,i))
         elif response.status_code == 404:
             print("JOB: %d-server error!" % i)
 
     end = time.time()
     elapsed = end - begin
     print("[CLIENT %d] Simulation Done in %d sec" % (ID, elapsed))
-    y_axis = [1 for i in range(len(poisson_data))]
-    plt.plot(poisson_data, y_axis, 'o-')
-    plt.xlabel('time (s)')
-    filename = "figures/client-" + str(ID) + "-poisson"
-    plt.savefig(filename)
+
+    # y_axis = [1 for i in range(len(poisson_data))]
+    # plt.plot(poisson_data, y_axis, 'o-')
+    # plt.xlabel('time (s)')
+    # filename = "figures/client-" + str(ID) + "-poisson"
+    # plt.savefig(filename)
+    filename = "poisson_data/client-" + str(ID) + "-poisson"
+    with open(filename, 'w', newline='') as myfile:
+        wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+        wr.writerow(poisson_data)
 
 
 if __name__ == '__main__':
@@ -47,3 +53,5 @@ if __name__ == '__main__':
     for p in jobs:
         p.join()
 
+    time.sleep(10)
+    print("All the processes are complete")
