@@ -38,7 +38,7 @@ def client_face_recognition(URL, ID):
     # plt.xlabel('time (s)')
     # filename = "figures/client-" + str(ID) + "-poisson"
     # plt.savefig(filename)
-    filename = "poisson_data/client-" + str(ID) + "-poisson"
+    filename = "poisson_data/client-" + str(ID) + "-poisson.csv"
     with open(filename, 'w', newline='') as myfile:
         wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
         wr.writerow(poisson_data)
@@ -53,5 +53,5 @@ if __name__ == '__main__':
     for p in jobs:
         p.join()
 
-    time.sleep(10)
-    print("All the processes are complete")
+    print("All clients done")
+

@@ -37,7 +37,7 @@ def face_recognition(job_id, client_id, queue_start):
         db_conn.close()
         break
 
-    return "Client: " + str(client_id) + " JOB: " + str(job_id) + " Duration: " + str(duration)
+    return "Client: " + str(client_id) + " JOB: " + str(job_id) + " Total: " + str(duration+queue_duration)
 
 
 @app.route('/')
