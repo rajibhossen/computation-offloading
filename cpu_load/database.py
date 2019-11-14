@@ -25,7 +25,7 @@ def get_connection():
 
     create_table(cursor, sql_create_tasks_table)
 
-    return connection
+    return cursor
 
 
 def close_connection(connection):
