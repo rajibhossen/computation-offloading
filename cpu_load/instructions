@@ -9,3 +9,11 @@ To run flask app
 
 To run flower monitoring
 # celery flower -A app.celery --broker=redis://localhost:6379/0
+
+export data to csv from sqlite3
+> sqlite3 dbname
+sqlite > .headers on
+sqlite > .mode csv
+sqlite > .output data.csv
+sqlite > select * from tasks;
+sqlite > .quit
