@@ -7,15 +7,15 @@ import os
 from multiprocessing import Process
 BASE_URL = "http://0.0.0.0:5000"
 F_REC = "/face_recognition"
-
+DATA_DIR = "generated_data/data-8-10-300-1d3/"
 
 def client_face_recognition(URL, ID):
-    poisson_rate = 1 / 3.0  # 1 jobs per 5 sec
+    poisson_rate = 1 / 3.0  # 1 jobs per 2 sec
     # simulate 30 minutes-10*30 = 300
     begin = time.time()
     time_series = 0
     poisson_data = []
-    for i in range(300):
+    for i in range(100):
         nextitem = random.expovariate(poisson_rate)
         # time_series += nextitem
         poisson_data.append(nextitem)
@@ -38,7 +38,7 @@ def client_face_recognition(URL, ID):
     # plt.xlabel('time (s)')
     # filename = "figures/client-" + str(ID) + "-poisson"
     # plt.savefig(filename)
-    filename = "generated_data/data-8-10-300-1d2/client-" + str(ID) + "-poisson.csv"
+    filename = DATA_DIR + "client-" + str(ID) + "-poisson.csv"
     with open(filename, 'w+') as myfile:
         wr = csv.writer(myfile)
         for val in poisson_data:
@@ -48,9 +48,8 @@ def client_face_recognition(URL, ID):
 if __name__ == '__main__':
     # client_face_recognition(BASE_URL + F_REC, 1)
     # client_face_recognition(BASE_URL + F_REC, 2)
-    dir = "generated_data/data-8-10-300-1d3/"
-    if not os.path.exists(dir):
-        os.makedirs(dir)
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
 
     jobs = [Process(target=client_face_recognition, args=(BASE_URL + F_REC, i)) for i in range(10)]
     for p in jobs:
