@@ -27,6 +27,7 @@ def face_recognition(job_id, client_id, queue_start):
     total = queue_duration + duration
     db_conn = database.get_connection()
     cursor = db_conn.cursor()
+    count = 0
     while True:
         try:
             cursor.execute("insert into tasks (client_id, job_id, arrival_time, end_time, job_time, queue_time,total_time) "
@@ -34,6 +35,11 @@ def face_recognition(job_id, client_id, queue_start):
                                               queue_duration, total))
             db_conn.commit()
         except sqlite3.Error as e:
+            print("write failed, trying again")
+            count += 1
+            if count == 5:
+                db_conn.close()
+                break
             continue
         db_conn.close()
         break
