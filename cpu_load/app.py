@@ -35,7 +35,7 @@ def face_recognition(job_id, client_id, queue_start):
                                               queue_duration, total))
             db_conn.commit()
         except sqlite3.Error as e:
-            print("write failed, trying again")
+            print("Error occured: " + str(e))
             count += 1
             if count == 5:
                 db_conn.close()
