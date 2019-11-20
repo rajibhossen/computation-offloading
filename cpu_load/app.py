@@ -27,9 +27,9 @@ def face_recognition(job_id, client_id, queue_start):
     duration = end - float(start)
     total = queue_duration + duration
 
-    client = MongoClient("localhost", 27017)
-    db = client["cpu_load"]
-    table = db.tasks
+    # client = MongoClient("localhost", 27017)
+    # db = client["cpu_load"]
+    # table = db.tasks
     # db_conn = database.get_connection()
     # cursor = db_conn.cursor()
     # count = 0
@@ -41,11 +41,10 @@ def face_recognition(job_id, client_id, queue_start):
             "job_time": duration,
             "queue_time": queue_duration,
             "total_time": total}
-
-    result = table.insert(data)
-    client.close()
-    return "Client#JOB: " + str(client_id) + "#" + str(job_id) + \
-           "Insert: "+ result.inserted_id + " Total: " + str(duration+queue_duration)
+    with MongoClient("localhost", 27017) as connection:
+        db = connection.cpu_load
+        db.tasks.insert_one(data)
+    return "Client#JOB: " + str(client_id) + "#" + str(job_id) + " Total: " + str(duration+queue_duration)
 
 
 @app.route('/')
