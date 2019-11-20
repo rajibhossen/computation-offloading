@@ -2,6 +2,7 @@ import time
 import sqlite3
 from celery import Celery
 from flask import Flask, request
+from pymongo import MongoClient
 from datetime import datetime
 
 import database
@@ -11,7 +12,7 @@ app = Flask(__name__)
 
 celery = Celery(broker='redis://localhost:6379/0')
 
-database.initialize_db() # initializing db connection
+# database.initialize_db() # initializing db connection
 
 
 @celery.task(name="face.recognition")
@@ -25,26 +26,26 @@ def face_recognition(job_id, client_id, queue_start):
     end = time.time()
     duration = end - float(start)
     total = queue_duration + duration
-    db_conn = database.get_connection()
-    cursor = db_conn.cursor()
-    count = 0
-    while True:
-        try:
-            cursor.execute("insert into tasks (client_id, job_id, arrival_time, end_time, job_time, queue_time,total_time) "
-                   "values (?,?,?,?,?,?,?)", (client_id, job_id, queue_start, end, duration, 
-                                              queue_duration, total))
-            db_conn.commit()
-        except sqlite3.Error as e:
-            print("Error occured: " + str(e))
-            count += 1
-            if count == 5:
-                db_conn.close()
-                break
-            continue
-        db_conn.close()
-        break
 
-    return "Client: " + str(client_id) + " JOB: " + str(job_id) + " Total: " + str(duration+queue_duration)
+    client = MongoClient("localhost", 27017)
+    db = client["cpu_load"]
+    table = db.tasks
+    # db_conn = database.get_connection()
+    # cursor = db_conn.cursor()
+    # count = 0
+
+    data = {"client_id": client_id,
+            "job_id": job_id,
+            "arrival_time": queue_start,
+            "end_time": end,
+            "job_time": duration,
+            "queue_time": queue_duration,
+            "total_time": total}
+
+    result = table.insert(data)
+    client.close()
+    return "Client#JOB: " + str(client_id) + "#" + str(job_id) + \
+           "Insert: "+ result.inserted_id + " Total: " + str(duration+queue_duration)
 
 
 @app.route('/')
