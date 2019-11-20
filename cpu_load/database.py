@@ -6,7 +6,7 @@ def create_table(cur, query):
 
 
 def get_connection():
-    conn = sqlite3.connect("cpu_load.db")
+    conn = sqlite3.connect("cpu_load.db", timeout=10)
     return conn
 
 
