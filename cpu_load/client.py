@@ -7,16 +7,16 @@ import os
 from multiprocessing import Process
 BASE_URL = "http://0.0.0.0:5000"
 F_REC = "/face_recognition"
-DATA_DIR = "generated_data/data-64-10-200-1d7/"
+DATA_DIR = "generated_data/data-64-10-200-1d6/"
 CLIENTS = 10
-POISSON_RATE = 1/7.0
+POISSON_RATE = 1/6.0
 
 def client_face_recognition(URL, ID):
     # simulate 30 minutes-10*30 = 300
     begin = time.time()
     time_series = 0
     poisson_data = []
-    for i in range(300):
+    for i in range(200):
         nextitem = random.expovariate(POISSON_RATE)
         # time_series += nextitem
         poisson_data.append(nextitem)
