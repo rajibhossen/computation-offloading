@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import csv
 
-FILEDIR = "data-32-20-300-1d6"
+FILEDIR = "data-64-10-300-1d2"
 DATA_DIR = "generated_data/" + FILEDIR + "/" 
 
 client = MongoClient('localhost', 27017)
