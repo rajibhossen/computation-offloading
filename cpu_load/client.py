@@ -7,7 +7,7 @@ import os
 from multiprocessing import Process
 BASE_URL = "http://0.0.0.0:5000"
 F_REC = "/face_recognition"
-DATA_DIR = "generated_data/data-8-10-400-1d5/"
+DATA_DIR = "generated_data/data-8-10-400-1d6/"
 
 def client_face_recognition(URL, ID):
     poisson_rate = 1 / 5.0  # 1 jobs per 2 sec
