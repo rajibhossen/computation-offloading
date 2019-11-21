@@ -1,14 +1,15 @@
 from pymongo import MongoClient
 import csv
 
-DATA_DIR = "generated_data/data-64-20-300-1d4/"
-FILENAME = "data-64-20-300-1d4.csv"
+FILEDIR = "data-64-20-300-1d6"
+DATA_DIR = "generated_data/" + FILEDIR + "/" 
+
 client = MongoClient('localhost', 27017)
 db = client['cpu_load']
 
 collection = db.tasks
 
-filename = DATA_DIR + FILENAME
+filename = DATA_DIR + FILEDIR + ".csv"
 headers = ["client_id", "job_id", "arrival_time", "end_time", "job_time", "queue_time", "total_time"]
 
 with open(filename, 'w+') as myfile:

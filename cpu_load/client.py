@@ -7,16 +7,17 @@ import os
 from multiprocessing import Process
 BASE_URL = "http://0.0.0.0:5000"
 F_REC = "/face_recognition"
-DATA_DIR = "generated_data/data-64-20-300-1d4/"
+DATA_DIR = "generated_data/data-64-20-300-1d6/"
+CLIENTS = 20
+POISSON_RATE = 1/6.0
 
 def client_face_recognition(URL, ID):
-    poisson_rate = 1 / 4.0  # 1 jobs per 2 sec
     # simulate 30 minutes-10*30 = 300
     begin = time.time()
     time_series = 0
     poisson_data = []
     for i in range(300):
-        nextitem = random.expovariate(poisson_rate)
+        nextitem = random.expovariate(POISSON_RATE)
         # time_series += nextitem
         poisson_data.append(nextitem)
         time.sleep(nextitem)
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
 
-    jobs = [Process(target=client_face_recognition, args=(BASE_URL + F_REC, i)) for i in range(20)]
+    jobs = [Process(target=client_face_recognition, args=(BASE_URL + F_REC, i)) for i in range(CLIENTS)]
     for p in jobs:
         p.start()
     for p in jobs:
