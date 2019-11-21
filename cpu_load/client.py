@@ -7,10 +7,10 @@ import os
 from multiprocessing import Process
 BASE_URL = "http://0.0.0.0:5000"
 F_REC = "/face_recognition"
-DATA_DIR = "generated_data/data-16-10-300-1d7/"
+DATA_DIR = "generated_data/data-64-20-300-1d4/"
 
 def client_face_recognition(URL, ID):
-    poisson_rate = 1 / 5.0  # 1 jobs per 2 sec
+    poisson_rate = 1 / 4.0  # 1 jobs per 2 sec
     # simulate 30 minutes-10*30 = 300
     begin = time.time()
     time_series = 0
@@ -43,6 +43,7 @@ def client_face_recognition(URL, ID):
         wr = csv.writer(myfile)
         for val in poisson_data:
             wr.writerow([val])
+        wr.writerow([elapsed])
 
 
 if __name__ == '__main__':
@@ -51,7 +52,7 @@ if __name__ == '__main__':
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
 
-    jobs = [Process(target=client_face_recognition, args=(BASE_URL + F_REC, i)) for i in range(10)]
+    jobs = [Process(target=client_face_recognition, args=(BASE_URL + F_REC, i)) for i in range(20)]
     for p in jobs:
         p.start()
     for p in jobs:
