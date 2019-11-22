@@ -7,9 +7,9 @@ import os
 from multiprocessing import Process
 BASE_URL = "http://0.0.0.0:5000"
 F_REC = "/face_recognition"
-DATA_DIR = "generated_data/data-16-20-200-1d5/"
+DATA_DIR = "generated_data/data-8-20-200-1d2/"
 CLIENTS = 20
-POISSON_RATE = 1/5.0
+POISSON_RATE = 1/2.0
 
 def client_face_recognition(URL, ID):
     # simulate 30 minutes-10*30 = 300
