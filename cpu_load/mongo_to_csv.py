@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import csv
 
-FILEDIR = "data-64-10-200-1d6"
+FILEDIR = "data-64-10-200-1d5"
 DATA_DIR = "generated_data/" + FILEDIR + "/" 
 
 client = MongoClient('localhost', 27017)
@@ -27,6 +27,6 @@ x = collection.delete_many({})
 print(x.deleted_count, " documents deleted.")
 job = sum(job_times) / len(job_times)
 queue = sum(queue_times) / len(queue_times)
-print("average job time:" % (job))
-print("average queue time:" % (queue))
+print("average job time: %0.4f" % (job))
+print("average queue time: %0.4f" % (queue))
 
